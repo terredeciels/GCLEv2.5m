@@ -117,7 +117,7 @@ public class GPosition implements ICodage{
         for (GCoups c : pseudocoups) {
             result.add(GCoups.getString(c));
         }
-        Collections.sort(result);
+//        Collections.sort(result);
         return result;
     }
 

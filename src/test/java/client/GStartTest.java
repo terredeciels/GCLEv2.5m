@@ -1,8 +1,11 @@
 package client;
 
+import chesspresso.move.Move;
 import gposition.CPosition;
+import gposition.GCoups;
 import gposition.GPosition;
 import java.util.ArrayList;
+import java.util.Collections;
 import main.Fen;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -15,9 +18,6 @@ public class GStartTest {
 
     private final GStart gStart;
     private final GPosition gposition;
-    private CPosition cposition;
-    private ArrayList<String> lg_coups;
-    private ArrayList<String> lcp_coups;
 
     class GPositionTest {
 
@@ -62,39 +62,47 @@ public class GStartTest {
     public void testCoupsValides() {
         for (String f : Fen.getFenList()) {
             gposition.init(f);
-            cposition = gposition.getCp_position();
-            ArrayList<String> diff = getTest().getDiffStringList();
+            CPosition cposition = gposition.getCp_position();
 
-            assert (diff.isEmpty());
-
+            ArrayList<String> lg_coups_str = gposition.getLAN();
+            ArrayList<String> lcp_coups_str = cposition.getLAN();
+            
+            ArrayList<String> lg_coups_str_tri = (ArrayList<String>) lg_coups_str.clone();
+            ArrayList<String> lcp_coups_str_tri = (ArrayList<String>) lcp_coups_str.clone();
+            Collections.sort(lg_coups_str_tri);
+            Collections.sort(lcp_coups_str_tri);
+            
+            assertEquals(lg_coups_str_tri, lcp_coups_str_tri);
             String result = cposition.getPosition().getFEN() + '\n'
                     + "Coups ChessPresso:" + "\n"
-                    + lg_coups + '\n'
+                    + lg_coups_str_tri + '\n'
                     + "Coups GCLE:" + "\n"
-                    + lcp_coups + "\n"
-                    + "Diff:" + "\n"
-                    + diff + "\n";
+                    + lcp_coups_str_tri + "\n";
+            System.out.println(result);
 
+            ArrayList<GCoups> lg_coups = gposition.getPseudocoups();
+            short[] lcp_coups = cposition.getCoups();
+            
+            if (!lg_coups_str.isEmpty()) {
+                GCoups gcoups = lg_coups.get(0);// premier coups de la liste
+                assertNotNull(gcoups);
+                String gcoups_str = GCoups.getString(gcoups);
+                assertTrue(lg_coups_str.contains(gcoups_str));
+                assertTrue(lcp_coups_str.contains(gcoups_str));
+                
+                int index = lcp_coups_str.indexOf(gcoups_str);//non trié
+                assertTrue(index != -1);
+                short coups = lcp_coups[index];//non trié
+                assertNotNull(coups);
+                String coups_str = Move.getString(coups);
+                assertEquals(coups_str, gcoups_str);
+                
+                
+
+            } else {
+                // fin de parties
+                System.out.println(cposition.getPosition().getFEN() + " : fin_de_partie");
+            }
         }
-    }
-
-    private GPositionTest getTest() {
-        GPositionTest valid = new GPositionTest();
-        lg_coups = gposition.getLAN();
-        lcp_coups = cposition.getLAN();
-
-        if (lg_coups.size() <= lcp_coups.size()) {
-            valid.setDiffStringList(getDiff(lg_coups, lcp_coups));
-        } else {
-            valid.setDiffStringList(getDiff(lcp_coups, lg_coups));
-        }
-
-        return valid;
-    }
-
-    private ArrayList<String> getDiff(ArrayList<String> L1, ArrayList<String> L2) {
-        L2.removeAll(L1);
-        return L2;
-
     }
 }

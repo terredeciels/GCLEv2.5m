@@ -67,7 +67,7 @@ public final class CPosition {
         return trait;
     }
 
-    protected short[] getCoups() {
+    public short[] getCoups() {
         return coups;
     }
 
@@ -112,7 +112,7 @@ public final class CPosition {
         for (short c : coups) {
             result.add(Move.getString(c));
         }
-        Collections.sort(result);
+//        Collections.sort(result);
         return result;
     }
 

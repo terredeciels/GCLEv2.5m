@@ -1,7 +1,6 @@
 package client;
 
 import gposition.GPosition;
-import main.Fen;
 import main.Ui;
 
 public class GStart {
@@ -10,16 +9,14 @@ public class GStart {
 
     public GStart() {
         gposition = GPosition.getInstance();
-
         initFen();
-
     }
 
     private void initFen() {
         String[] command = new String[3];
         command[0] = "-cli";
         command[1] = "D:\\Documents\\CHESS\\MAVEN\\parties\\bird.pgn";//353
-//        command[1] = "F:/ProgmEchecsNotes/Tartakower.pgn";//1290
+//        command[1] = "D:\\Documents\\CHESS\\MAVEN\\parties\\Tartakower.pgn";//1290
         Ui.main(command);
     }
 
