@@ -14,10 +14,28 @@ import static org.junit.Assert.*;
 public class GStartTest {
 
     private final GStart gStart;
-    private  GPosition gposition;
-    private  CPosition cposition;
+    private final GPosition gposition;
+    private CPosition cposition;
     private ArrayList<String> lg_coups;
     private ArrayList<String> lcp_coups;
+
+    class GPositionTest {
+
+        private ArrayList<String> diffStringList;
+
+        protected GPositionTest() {
+            diffStringList = new ArrayList<>();
+        }
+
+        protected ArrayList<String> getDiffStringList() {
+            return diffStringList;
+        }
+
+        protected void setDiffStringList(ArrayList<String> diffStringList) {
+            this.diffStringList = diffStringList;
+        }
+
+    }
 
     public GStartTest() {
         gStart = new GStart();
@@ -46,7 +64,7 @@ public class GStartTest {
             gposition.init(f);
             cposition = gposition.getCp_position();
             ArrayList<String> diff = getTest().getDiffStringList();
-            
+
             assert (diff.isEmpty());
 
             String result = cposition.getPosition().getFEN() + '\n'
