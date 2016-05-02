@@ -15,7 +15,7 @@ public class GStart {
     private void initFen() {
         String[] command = new String[3];
         command[0] = "-cli";
-        command[1] = "D:\\Documents\\CHESS\\MAVEN\\parties\\bird.pgn";//353
+        command[1] = "D:\\Documents\\CHESS\\MAVEN\\parties\\Bird100.pgn";
 //        command[1] = "D:\\Documents\\CHESS\\MAVEN\\parties\\Tartakower.pgn";//1290
         Ui.main(command);
     }

@@ -3,7 +3,6 @@ package gposition;
 import chesspresso.move.Move;
 import chesspresso.position.Position;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public final class CPosition {
 

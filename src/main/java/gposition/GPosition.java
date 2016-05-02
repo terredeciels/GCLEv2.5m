@@ -5,7 +5,7 @@ import gposition.generateur.*;
 import java.util.*;
 import org.apache.commons.collections.iterators.*;
 
-public class GPosition implements ICodage{
+public class GPosition implements ICodage {
 
     private final static GPosition INSTANCE = new GPosition();
 
@@ -26,6 +26,39 @@ public class GPosition implements ICodage{
 
     public static GPosition getInstance() {
         return INSTANCE;
+    }
+
+    public void execGCoups(GCoups coups) {
+        int couleur = trait;
+        int caseO = coups.getCaseO();
+        int caseX = coups.getCaseX();
+        caseEP = -1;
+        if (coups.getPiece() == PION && Math.abs(caseX - caseO) == 24) {// avance de 2 cases
+            caseEP = couleur == NOIR ? caseX + 12 : caseX - 12;
+        }
+        if (coups.getTypeDeCoups()
+                == ICodage.TYPE_DE_COUPS.Deplacement
+                || coups.getTypeDeCoups() == ICodage.TYPE_DE_COUPS.Prise) {
+            etats[caseX] = etats[caseO];
+            etats[caseO] = VIDE;
+        } else if (coups.getTypeDeCoups()
+                == ICodage.TYPE_DE_COUPS.EnPassant) {
+            // caseX == caseEP
+            etats[caseX] = etats[caseO];
+            etats[caseO] = VIDE;
+            if (couleur == BLANC) {
+                etats[caseX + sud] = VIDE;
+            } else if (couleur == NOIR) {
+                etats[caseX + nord] = VIDE;
+            }
+        } else if (coups.getTypeDeCoups() == ICodage.TYPE_DE_COUPS.Promotion) {
+            etats[caseX] = coups.getPiecePromotion();
+            etats[caseO] = VIDE;
+
+        } else if (coups.getTypeDeCoups() == ICodage.TYPE_DE_COUPS.Roque) {
+
+        }
+
     }
 
     public final void init(final String fen) throws IllegalArgumentException {
@@ -126,6 +159,5 @@ public class GPosition implements ICodage{
         return getLAN().toString();
 
     }
-
 
 }

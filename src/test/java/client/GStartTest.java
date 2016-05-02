@@ -1,6 +1,7 @@
 package client;
 
 import chesspresso.move.Move;
+import chesspresso.position.Position;
 import gposition.CPosition;
 import gposition.GCoups;
 import gposition.GPosition;
@@ -18,24 +19,6 @@ public class GStartTest {
 
     private final GStart gStart;
     private final GPosition gposition;
-
-    class GPositionTest {
-
-        private ArrayList<String> diffStringList;
-
-        protected GPositionTest() {
-            diffStringList = new ArrayList<>();
-        }
-
-        protected ArrayList<String> getDiffStringList() {
-            return diffStringList;
-        }
-
-        protected void setDiffStringList(ArrayList<String> diffStringList) {
-            this.diffStringList = diffStringList;
-        }
-
-    }
 
     public GStartTest() {
         gStart = new GStart();
@@ -63,45 +46,35 @@ public class GStartTest {
         for (String f : Fen.getFenList()) {
             gposition.init(f);
             CPosition cposition = gposition.getCp_position();
-
+            //verifier les coups valides non les positions genere ?
             ArrayList<String> lg_coups_str = gposition.getLAN();
             ArrayList<String> lcp_coups_str = cposition.getLAN();
-            
+
             ArrayList<String> lg_coups_str_tri = (ArrayList<String>) lg_coups_str.clone();
             ArrayList<String> lcp_coups_str_tri = (ArrayList<String>) lcp_coups_str.clone();
             Collections.sort(lg_coups_str_tri);
             Collections.sort(lcp_coups_str_tri);
-            
             assertEquals(lg_coups_str_tri, lcp_coups_str_tri);
-            String result = cposition.getPosition().getFEN() + '\n'
-                    + "Coups ChessPresso:" + "\n"
-                    + lg_coups_str_tri + '\n'
-                    + "Coups GCLE:" + "\n"
-                    + lcp_coups_str_tri + "\n";
-            System.out.println(result);
 
             ArrayList<GCoups> lg_coups = gposition.getPseudocoups();
             short[] lcp_coups = cposition.getCoups();
-            
+
             if (!lg_coups_str.isEmpty()) {
                 GCoups gcoups = lg_coups.get(0);// premier coups de la liste
                 assertNotNull(gcoups);
                 String gcoups_str = GCoups.getString(gcoups);
                 assertTrue(lg_coups_str.contains(gcoups_str));
                 assertTrue(lcp_coups_str.contains(gcoups_str));
-                
+
                 int index = lcp_coups_str.indexOf(gcoups_str);//non trié
                 assertTrue(index != -1);
                 short coups = lcp_coups[index];//non trié
                 assertNotNull(coups);
                 String coups_str = Move.getString(coups);
                 assertEquals(coups_str, gcoups_str);
-                
-                
 
-            } else {
-                // fin de parties
-                System.out.println(cposition.getPosition().getFEN() + " : fin_de_partie");
+//                gposition.execGCoups(gcoups);
+//                assertEquals(gposition.getTrait(),cposition.getTrait());
             }
         }
     }
