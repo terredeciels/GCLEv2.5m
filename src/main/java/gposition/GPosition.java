@@ -1,6 +1,7 @@
 package gposition;
 
 import chesspresso.*;
+import chesspresso.position.Position;
 import gposition.generateur.*;
 import java.util.*;
 import org.apache.commons.collections.iterators.*;
@@ -9,7 +10,7 @@ public class GPosition implements ICodage {
 
     private final static GPosition INSTANCE = new GPosition();
 
-//    private String fen;
+    private String fen;
     private final int[] etats;
     private int trait;
     private ArrayList<GCoups> pseudocoups;
@@ -61,8 +62,8 @@ public class GPosition implements ICodage {
 
     }
 
-    public final void init(final String fen) throws IllegalArgumentException {
-//        this.fen = fen;
+    public final void init(final String f) throws IllegalArgumentException {
+        fen = f;
         cp_position = CPosition.getInstance();
         cp_position.init(fen);
 
@@ -105,6 +106,10 @@ public class GPosition implements ICodage {
         return etats;
     }
 
+    public Position getPosition() {
+        return cp_position.getPosition();
+    }
+
     public int getTrait() {
         return trait;
     }
@@ -113,8 +118,16 @@ public class GPosition implements ICodage {
         return caseEP;
     }
 
+    public String getFen() {
+        return fen;
+    }
+
     public ArrayList<GCoups> getPseudocoups() {
         return pseudocoups;
+    }
+
+    public void setPseudocoups(ArrayList<GCoups> pseudocoups) {
+        this.pseudocoups = pseudocoups;
     }
 
     public CPosition getCp_position() {

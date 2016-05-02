@@ -1,12 +1,17 @@
 package client;
 
+import chesspresso.Chess;
+import chesspresso.move.IllegalMoveException;
 import chesspresso.move.Move;
 import chesspresso.position.Position;
 import gposition.CPosition;
 import gposition.GCoups;
 import gposition.GPosition;
+import static gposition.generateur.ICodage.BLANC;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import main.Fen;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -46,11 +51,11 @@ public class GStartTest {
         for (String f : Fen.getFenList()) {
             gposition.init(f);
             CPosition cposition = gposition.getCp_position();
+
             //verifier les coups valides non les positions genere ?
             ArrayList<String> lg_coups_str = gposition.getLAN();
-            ArrayList<String> lcp_coups_str = cposition.getLAN();
-
             ArrayList<String> lg_coups_str_tri = (ArrayList<String>) lg_coups_str.clone();
+            ArrayList<String> lcp_coups_str = cposition.getLAN();
             ArrayList<String> lcp_coups_str_tri = (ArrayList<String>) lcp_coups_str.clone();
             Collections.sort(lg_coups_str_tri);
             Collections.sort(lcp_coups_str_tri);
@@ -73,8 +78,29 @@ public class GStartTest {
                 String coups_str = Move.getString(coups);
                 assertEquals(coups_str, gcoups_str);
 
-//                gposition.execGCoups(gcoups);
-//                assertEquals(gposition.getTrait(),cposition.getTrait());
+                gposition.setPseudocoups(lg_coups);
+//                  gposition = gposition.execGCoups(gposition, gcoups, ordi_couleur);
+//                  gposition.setGCoups(gcoups);
+                //ChessPresso
+                Position position = gposition.getPosition();
+//                int cp_ordi_couleur = ordi_couleur == BLANC ? Chess.WHITE : Chess.BLACK;
+//                position.setToPlay(cp_ordi_couleur);
+//                gposition.setCPCoups(lcp_coups);
+                try {
+                    position.doMove(coups);
+                } catch (IllegalMoveException ex) {
+                    Logger.getLogger(GStartTest.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                //verifier les coups valides non les positions genere ?
+//                ArrayList<String> lg_coups_str1 = gposition.getLAN();
+//                ArrayList<String> lg_coups_str_tri1 = (ArrayList<String>) lg_coups_str1.clone();
+//                ArrayList<String> lcp_coups_str1 = cposition.getLAN();
+//                ArrayList<String> lcp_coups_str_tri1 = (ArrayList<String>) lcp_coups_str1.clone();
+//                Collections.sort(lg_coups_str_tri1);
+//                Collections.sort(lcp_coups_str_tri1);
+//                
+//                assertEquals(lg_coups_str_tri1, lcp_coups_str_tri1);
             }
         }
     }
