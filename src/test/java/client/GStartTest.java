@@ -1,13 +1,11 @@
 package client;
 
-import chesspresso.Chess;
 import chesspresso.move.IllegalMoveException;
 import chesspresso.move.Move;
 import chesspresso.position.Position;
 import gposition.CPosition;
 import gposition.GCoups;
 import gposition.GPosition;
-import static gposition.generateur.ICodage.BLANC;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.logging.Level;
@@ -62,7 +60,7 @@ public class GStartTest {
             assertEquals(lg_coups_str_tri, lcp_coups_str_tri);
 
             ArrayList<GCoups> lg_coups = gposition.getPseudocoups();
-            short[] lcp_coups = cposition.getCoups();
+            short[] lcp_coups = cposition.getMoves();
 
             if (!lg_coups_str.isEmpty()) {
                 GCoups gcoups = lg_coups.get(0);// premier coups de la liste
@@ -78,29 +76,29 @@ public class GStartTest {
                 String coups_str = Move.getString(coups);
                 assertEquals(coups_str, gcoups_str);
 
-                gposition.setPseudocoups(lg_coups);
-//                  gposition = gposition.execGCoups(gposition, gcoups, ordi_couleur);
-//                  gposition.setGCoups(gcoups);
+                gposition.setTrait(-cposition.getTrait());
+                //GCLE
+                gposition.execGCoups(gcoups);// ==> coups des noirs ? trait ?
                 //ChessPresso
-                Position position = gposition.getPosition();
-//                int cp_ordi_couleur = ordi_couleur == BLANC ? Chess.WHITE : Chess.BLACK;
-//                position.setToPlay(cp_ordi_couleur);
-//                gposition.setCPCoups(lcp_coups);
-                try {
-                    position.doMove(coups);
-                } catch (IllegalMoveException ex) {
-                    Logger.getLogger(GStartTest.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                
+                cposition.doMove(coups);//==>coups des blancs ? trait ?
+
                 //verifier les coups valides non les positions genere ?
-//                ArrayList<String> lg_coups_str1 = gposition.getLAN();
-//                ArrayList<String> lg_coups_str_tri1 = (ArrayList<String>) lg_coups_str1.clone();
-//                ArrayList<String> lcp_coups_str1 = cposition.getLAN();
-//                ArrayList<String> lcp_coups_str_tri1 = (ArrayList<String>) lcp_coups_str1.clone();
-//                Collections.sort(lg_coups_str_tri1);
-//                Collections.sort(lcp_coups_str_tri1);
-//                
-//                assertEquals(lg_coups_str_tri1, lcp_coups_str_tri1);
+                ArrayList<String> lg_coups_str1 = gposition.getLAN();
+                ArrayList<String> lcp_coups_str1 = cposition.getLAN();
+
+                ArrayList<String> lg_coups_str_tri1 = (ArrayList<String>) lg_coups_str1.clone();
+                ArrayList<String> lcp_coups_str_tri1 = (ArrayList<String>) lcp_coups_str1.clone();
+
+                Collections.sort(lg_coups_str_tri1);
+                Collections.sort(lcp_coups_str_tri1);
+
+                System.out.println(cposition.getPosition().getFEN());
+                System.out.println("GCLE");
+                System.out.println(lg_coups_str_tri1);
+                System.out.println("ChessPresso");
+                System.out.println(lcp_coups_str_tri1);
+
+                assertEquals(lg_coups_str_tri1, lcp_coups_str_tri1);
             }
         }
     }

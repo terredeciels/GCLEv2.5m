@@ -59,6 +59,7 @@ public class GPosition implements ICodage {
         } else if (coups.getTypeDeCoups() == ICodage.TYPE_DE_COUPS.Roque) {
 
         }
+        pseudocoups = new Generateur(this).getCoups();
 
     }
 
@@ -112,6 +113,10 @@ public class GPosition implements ICodage {
 
     public int getTrait() {
         return trait;
+    }
+
+    public void setTrait(int trait) {
+        this.trait = trait;
     }
 
     public int getCaseEP() {

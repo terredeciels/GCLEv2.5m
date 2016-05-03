@@ -1,8 +1,11 @@
 package gposition;
 
+import chesspresso.move.IllegalMoveException;
 import chesspresso.move.Move;
 import chesspresso.position.Position;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public final class CPosition {
 
@@ -14,7 +17,7 @@ public final class CPosition {
         58, 59, 60, 61, 62, 63
     };
     private int[] etats;
-    private short[] coups;
+    private short[] moves;
     private int trait;
     private boolean droitPetitRoqueBlanc;
     private boolean droitGrandRoqueNoir;
@@ -41,7 +44,7 @@ public final class CPosition {
             etats[caseO] = position.getStone(caseO);
         }
 
-        coups = position.getAllMoves();
+        moves = position.getAllMoves();
         trait = position.getToPlay();
 
         // roques - cf note_tad.txt
@@ -62,12 +65,12 @@ public final class CPosition {
         return etats;
     }
 
-    protected int getTrait() {
+    public int getTrait() {
         return trait;
     }
 
-    public short[] getCoups() {
-        return coups;
+    public short[] getMoves() {
+        return moves;
     }
 
     public int getCaseEP() {
@@ -106,9 +109,9 @@ public final class CPosition {
         this.droitGrandRoqueBlanc = b;
     }
 
-   public ArrayList<String> getLAN() {
+    public ArrayList<String> getLAN() {
         ArrayList<String> result = new ArrayList();
-        for (short c : coups) {
+        for (short c : moves) {
             result.add(Move.getString(c));
         }
 //        Collections.sort(result);
@@ -118,6 +121,16 @@ public final class CPosition {
     @Override
     public String toString() {
         return getLAN().toString();
+    }
+
+    public void doMove(short coups) {
+        try {
+            position.doMove(coups);
+
+        } catch (IllegalMoveException ex) {
+            Logger.getLogger(CPosition.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        moves = position.getAllMoves();
     }
 
 }
