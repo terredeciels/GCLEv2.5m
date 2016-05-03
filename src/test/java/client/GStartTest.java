@@ -14,8 +14,8 @@ import static org.junit.Assert.*;
 public class GStartTest {
 
     private final GStart gStart;
-    private  GPosition gposition;
-    private  CPosition cposition;
+    private final GPosition gposition;
+    private CPosition cposition;
     private ArrayList<String> lg_coups;
     private ArrayList<String> lcp_coups;
 
@@ -45,38 +45,20 @@ public class GStartTest {
         for (String f : Fen.getFenList()) {
             gposition.init(f);
             cposition = gposition.getCp_position();
-            ArrayList<String> diff = getTest().getDiffStringList();
-            
-            assert (diff.isEmpty());
+            lg_coups = gposition.getLAN();
+            lcp_coups = cposition.getLAN();
+
+            assertEquals(lg_coups, lcp_coups);
 
             String result = cposition.getPosition().getFEN() + '\n'
                     + "Coups ChessPresso:" + "\n"
                     + lg_coups + '\n'
                     + "Coups GCLE:" + "\n"
-                    + lcp_coups + "\n"
-                    + "Diff:" + "\n"
-                    + diff + "\n";
+                    + lcp_coups + "\n";
+
+            System.out.println(result);
 
         }
     }
 
-    private GPositionTest getTest() {
-        GPositionTest valid = new GPositionTest();
-        lg_coups = gposition.getLAN();
-        lcp_coups = cposition.getLAN();
-
-        if (lg_coups.size() <= lcp_coups.size()) {
-            valid.setDiffStringList(getDiff(lg_coups, lcp_coups));
-        } else {
-            valid.setDiffStringList(getDiff(lcp_coups, lg_coups));
-        }
-
-        return valid;
-    }
-
-    private ArrayList<String> getDiff(ArrayList<String> L1, ArrayList<String> L2) {
-        L2.removeAll(L1);
-        return L2;
-
-    }
 }
